@@ -2,16 +2,33 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/zmb3/spotify/v2"
+	spotifyauth "github.com/zmb3/spotify/v2/auth"
 )
+
+const redirectURI = "http://localhost:8888/callback"
 
 var (
 	DiscordToken string
+	discordSession *discordgo.Session
+	client *spotify.Client
+	user *spotify.PrivateUser
+
+	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(redirectURI),
+							spotifyauth.WithScopes(
+								spotifyauth.ScopeUserReadPrivate,
+								spotifyauth.ScopePlaylistModifyPublic,
+								spotifyauth.ScopePlaylistModifyPrivate,
+								spotifyauth.ScopeUserLibraryModify,
+								spotifyauth.ScopeUserLibraryRead,
+								spotifyauth.ScopeUserTopRead))
+	ch    = make(chan *spotify.Client)
+	state = "myState"
 )
 
 func init() {
@@ -21,35 +38,11 @@ func init() {
 
 func main() {
 
-	// Create Discord session
-	discordSession, sessionError := discordgo.New("Bot " + DiscordToken)
-	if sessionError != nil {
-		fmt.Println("Error: Cannot create Discord session,", sessionError)
-		return
-	}
+	startServer()
 
-	// messageCreate - callback for MessageCreate events
-	discordSession.AddHandler(messageCreate)
-
-	// receiving message events
-	discordSession.Identify.Intents = discordgo.IntentsGuildMessages
-
-	// open websocket connection
-	sessionError = discordSession.Open()
-	if sessionError != nil {
-		fmt.Println("Error: cannot open connection,", sessionError)
-		return
-	}
-
-	fmt.Println("Log: ROSbot is up.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
-	// close Discord session
-	err := discordSession.Close()
-	if err != nil {
-		fmt.Println("Error: error closing session,", sessionError)
-		return
-	}
+	stopServer()
 }
