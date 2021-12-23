@@ -39,10 +39,17 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 		if strings.Contains(message.Content, "happy"){
 			playlist, err = createPlaylist("happy")
-		}
+			tracks, err := getTracks("happy")
+			if err != nil {
+				return
+			}
 
-		if strings.Contains(message.Content, "sad"){
-			playlist, err = createPlaylist("sad")
+			for _,track := range tracks {
+				_, err := client.AddTracksToPlaylist(context.Background(), playlist.ID, track)
+				if err != nil {
+					return 
+				}
+			}
 		}
 
 		if err != nil {
