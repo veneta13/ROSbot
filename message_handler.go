@@ -15,6 +15,23 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		return
 	}
 
+	if message.Content == "!help" {
+		messageContent := &discordgo.MessageSend{
+			Embed: &discordgo.MessageEmbed{
+				Color: 0x0088de,
+				Description:
+				":scroll: **COMMANDS**\n\n" +
+					":point_right: use `!help` to get this list\n\n" +
+					":point_right: use `!log-in` to connect your Spotify account\n\n" +
+					":point_right: use `!create-playlist {mood}` to create a playlist\n\n" +
+					":grey_exclamation: **Supported moods** :\n\n" +
+					":smile: happy\n\n" +
+					":point_right: use `!say-hi` for a surprise\n",
+			},
+		}
+		_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
+	}
+
 	if message.Content == "!log-in"{
 		loginLink := spotifyLogin()
 		_, _ = session.ChannelMessageSend(message.ChannelID, loginLink)
@@ -28,34 +45,51 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	}
 
 	// !say-hi command
-	if message.Content == "!say-hi" && user != nil{
-		_, _ = session.ChannelMessageSend(message.ChannelID, "Hello")
+	if message.Content == "!say-hi"{
+		_, _ = session.ChannelMessageSend(message.ChannelID, "Hello " + message.Author.Username + " :wave:")
 	}
 
 	// !create-playlist command
-	if strings.Contains(message.Content, "!create-playlist") && user != nil {
-		var err error
-		var playlist *spotify.FullPlaylist
+	if strings.Contains(message.Content, "!create-playlist"){
+		if user != nil {
+			var playlist *spotify.FullPlaylist
+			var err error
 
-		if strings.Contains(message.Content, "happy"){
-			playlist, err = createPlaylist("happy")
-			tracks, err := getTracks("happy")
-			if err != nil {
-				return
-			}
-
-			for _,track := range tracks {
-				_, err := client.AddTracksToPlaylist(context.Background(), playlist.ID, track)
+			if strings.Contains(message.Content, "happy"){
+				playlist, err = makeCompletePlaylist("happy", PlaylistCoverFile)
 				if err != nil {
-					return 
+					return
 				}
 			}
-		}
 
-		if err != nil {
-			fmt.Println(err)
-		}
+			if err != nil {
+				_, _ = session.ChannelMessageSend(
+					message.ChannelID,
+					"Cannot create playlist :pensive: Please try again")
+				fmt.Println(err)
+			}
 
-		fmt.Println("Log: " + playlist.Name + " created successfully")
+			fmt.Println("Log: " + playlist.Name + " created successfully ")
+
+			messageContent := &discordgo.MessageSend{
+				Content: "Playlist created successfully :partying_face:",
+				Embed: &discordgo.MessageEmbed{
+					Image: &discordgo.MessageEmbedImage{
+						URL: PlaylistCoverURL,
+					},
+					Color: 0x0088de,
+					Description:
+					"You can access your playlist here :point_right:" +
+						"https://open.spotify.com/playlist/" +
+						string(playlist.ID),
+				},
+			}
+			_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
+
+		} else {
+			fmt.Println("Log: Require login")
+			_, _ = session.ChannelMessageSend(message.ChannelID, "Please `!log-in` before creating playlists :wink:")
+
+		}
 	}
 }

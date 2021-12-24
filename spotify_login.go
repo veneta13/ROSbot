@@ -26,7 +26,7 @@ func AuthUser() (context.Context, string) {
 	}()
 
 	url := auth.AuthURL(state)
-	loginLink := "Log in via Spotify:\n " + url + "\n"
+	loginLink := "Log in via Spotify here :point_right: " + url
 	return context.Background(), loginLink
 }
 
