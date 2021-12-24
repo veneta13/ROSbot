@@ -41,7 +41,6 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		user = privateUser
 
 		fmt.Println("Log: Logged in as:", user.ID)
-		return
 	}
 
 	// !say-hi command
@@ -55,24 +54,27 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			var playlist *spotify.FullPlaylist
 			var err error
 
-			if strings.Contains(message.Content, "happy"){
-				playlist, err = makeCompletePlaylist("happy", PlaylistCoverFile)
-				if err != nil {
-					return
-				}
-			}
+			playlist, err = getPlaylistByMood(message.Content)
 
 			if err != nil {
 				_, _ = session.ChannelMessageSend(
 					message.ChannelID,
 					"Cannot create playlist :pensive: Please try again")
 				fmt.Println(err)
+				return
+			}
+
+			if playlist == nil {
+				_, _ = session.ChannelMessageSend(
+					message.ChannelID,
+					"Key word not recognised :cry: Please try again")
+				return
 			}
 
 			fmt.Println("Log: " + playlist.Name + " created successfully ")
 
 			messageContent := &discordgo.MessageSend{
-				Content: "Playlist created successfully :partying_face:",
+				Content: playlist.Name + " created successfully :partying_face:",
 				Embed: &discordgo.MessageEmbed{
 					Image: &discordgo.MessageEmbedImage{
 						URL: PlaylistCoverURL,
@@ -89,7 +91,78 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		} else {
 			fmt.Println("Log: Require login")
 			_, _ = session.ChannelMessageSend(message.ChannelID, "Please `!log-in` before creating playlists :wink:")
+		}
+	}
 
+	// !get-stats command
+	if strings.Contains(message.Content, "!get-stats"){
+		if user != nil {
+			types, time := getStatsType(message.Content)
+			tracks, artists, err := getStats(types, time)
+
+			if err != nil {
+				fmt.Println("Error reading user stats")
+				_, _ = session.ChannelMessageSend(message.ChannelID, "Getting your stats was unsuccessful :cry: Please try again")
+				return
+			}
+
+			if tracks == nil && artists == nil {
+				fmt.Println("Unrecognised command")
+				_, _ = session.ChannelMessageSend(message.ChannelID, "I don't recognise this command :thinking: Please try again")
+				return
+			}
+
+			if tracks != nil {
+				trackList := makeTrackList(tracks)
+
+				messageContent := &discordgo.MessageSend{
+					Embed: &discordgo.MessageEmbed{
+						Image:  &discordgo.MessageEmbedImage{
+							URL: trackList[0].Album.Images[0].URL,
+						},
+						Color: 0xffd700,
+						Description:
+						":trophy: **YOUR TOP SONGS**\n\n" +
+						":first_place: " + trackList[0].Name + " - " + trackList[0].Artists[0].Name + "\n" +
+						":second_place: " + trackList[1].Name + " - " + trackList[1].Artists[0].Name + "\n" +
+						":third_place: " + trackList[2].Name + " - " + trackList[2].Artists[0].Name + "\n" +
+						"4. " + trackList[3].Name + " - " + trackList[3].Artists[0].Name + "\n" +
+						"5. " + trackList[4].Name + " - " + trackList[4].Artists[0].Name + "\n" +
+						"6. " + trackList[5].Name + " - " + trackList[5].Artists[0].Name + "\n" +
+						"7. " + trackList[6].Name + " - " + trackList[6].Artists[0].Name + "\n" +
+						"8. " + trackList[7].Name + " - " + trackList[7].Artists[0].Name + "\n" +
+						"9. " + trackList[8].Name + " - " + trackList[8].Artists[0].Name + "\n" +
+						"10. " + trackList[9].Name + " - " + trackList[9].Artists[0].Name + "\n",
+					},
+				}
+				_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
+			}
+
+			if artists != nil {
+				artistList := makeArtistList(artists)
+
+				messageContent := &discordgo.MessageSend{
+					Embed: &discordgo.MessageEmbed{
+						Image:  &discordgo.MessageEmbedImage{
+							URL: artistList[0].Images[0].URL,
+						},
+						Color: 0xffd700,
+						Description:
+						":trophy: **YOUR TOP ARTISTS**\n\n" +
+							":first_place: " + artistList[0].Name + "\n" +
+							":second_place: " + artistList[1].Name + "\n" +
+							":third_place: " + artistList[2].Name + "\n" +
+							"4. " + artistList[3].Name + "\n" +
+							"5. " + artistList[4].Name + "\n",
+					},
+				}
+				_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
+			}
+			return
+
+		} else {
+			fmt.Println("Log: Require login")
+			_, _ = session.ChannelMessageSend(message.ChannelID, "Please `!log-in` go get your stats :wink:")
 		}
 	}
 }

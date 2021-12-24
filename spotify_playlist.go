@@ -3,11 +3,13 @@ package main
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/zmb3/spotify/v2"
 	"io"
 	"io/ioutil"
 	"math/rand"
+	"strings"
 )
 
 func createPlaylist(mood string) (*spotify.FullPlaylist, error) {
@@ -89,4 +91,38 @@ func makeCompletePlaylist(mood string, coverImage string) (playlist *spotify.Ful
 	}
 
 	return playlist, err
+}
+
+func getPlaylistByMood (message string) (*spotify.FullPlaylist, error) {
+	if strings.Contains(message, "happy"){
+		return makeCompletePlaylist("happy", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "sad"){
+		return makeCompletePlaylist("sad", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "relaxed"){
+		return makeCompletePlaylist("relaxing", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "party"){
+		return makeCompletePlaylist("party", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "focused"){
+		return makeCompletePlaylist("focus", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "romantic"){
+		return makeCompletePlaylist("romance", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "holiday"){
+		return makeCompletePlaylist("holiday", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "travel"){
+		return makeCompletePlaylist("road", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "motivated"){
+		return makeCompletePlaylist("motivational", PlaylistCoverFile)
+	}
+	if strings.Contains(message, "sleepy"){
+		return makeCompletePlaylist("sleep", PlaylistCoverFile)
+	}
+	return nil, errors.New("error: mood not found")
 }
