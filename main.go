@@ -21,16 +21,17 @@ var (
 	client *spotify.Client
 	user *spotify.PrivateUser
 
-	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(RedirectUri),
-							spotifyauth.WithScopes(
-								spotifyauth.ScopeUserReadPrivate,
-								spotifyauth.ScopePlaylistModifyPublic,
-								spotifyauth.ScopePlaylistModifyPrivate,
-								spotifyauth.ScopeUserLibraryModify,
-								spotifyauth.ScopeUserLibraryRead,
-								spotifyauth.ScopeUserTopRead,
-								spotifyauth.ScopeUserModifyPlaybackState,
-								spotifyauth.ScopeImageUpload))
+	auth  = spotifyauth.New(
+		spotifyauth.WithRedirectURL(RedirectUri),
+		spotifyauth.WithScopes(
+			spotifyauth.ScopeUserReadPrivate,
+			spotifyauth.ScopePlaylistModifyPublic,
+			spotifyauth.ScopePlaylistModifyPrivate,
+			spotifyauth.ScopeUserLibraryModify,
+			spotifyauth.ScopeUserLibraryRead,
+			spotifyauth.ScopeUserTopRead,
+			spotifyauth.ScopeUserModifyPlaybackState,
+			spotifyauth.ScopeImageUpload))
 	ch    = make(chan *spotify.Client)
 	state = "myState"
 )
