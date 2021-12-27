@@ -10,6 +10,8 @@ import (
 	"github.com/zmb3/spotify/v2"
 )
 
+const Port = ":8888"
+const Pattern = "/callback"
 const RedirectUri = "http://localhost:8888/callback"
 const PlaylistCoverURL = "https://raw.githubusercontent.com/veneta13/ROSbot/master/assets/playlist.png?token=AIY3LQX3UH4IYQFDD6DX43TBZ3S54"
 const PlaylistCoverFile = "./assets/playlist.png"
