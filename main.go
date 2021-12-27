@@ -14,9 +14,13 @@ import (
 const RedirectUri = "http://localhost:8888/callback"
 const PlaylistCoverURL = "https://raw.githubusercontent.com/veneta13/ROSbot/master/assets/playlist.png?token=AIY3LQX3UH4IYQFDD6DX43TBZ3S54"
 const PlaylistCoverFile = "./assets/playlist.png"
+const AuthURL = "https://accounts.spotify.com/authorize"
+const TokenURL = "https://accounts.spotify.com/api/token"
 
 var (
 	DiscordToken string
+	clientSecret string
+	clientID string
 	discordSession *discordgo.Session
 	client *spotify.Client
 	user *spotify.PrivateUser

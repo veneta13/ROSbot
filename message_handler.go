@@ -22,7 +22,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 				Description:
 				":scroll: **COMMANDS**\n\n" +
 				":point_right: use `!help` to get this list\n\n" +
-				":point_right: use `!log-in` to connect your Spotify account\n\n" +
+				":point_right: use `!log-in ID={CLIENT_ID} SECRET={CLIENT_SECRET}` to connect your Spotify account\n\n" +
 				":point_right: use `!say-hi` for a surprise\n\n" +
 				":point_right: use `!get-stats {type} {time}` to get your Spotify stats\n\n" +
 				":bar_chart: __Supported types__:\n\n" +
@@ -49,7 +49,18 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
 	}
 
-	if message.Content == "!log-in"{
+	if strings.Contains(message.Content, "!log-in"){
+
+		if strings.Contains(message.Content, "ID=") && strings.Contains(message.Content, "SECRET="){
+			clientID = strings.SplitAfter(message.Content, "ID=")[0]
+			clientSecret = strings.SplitAfter(message.Content, "SECRET=")[0]
+			deleteMessage(session, message)
+		} else {
+			fmt.Println("Cannot log in")
+			_, _ = session.ChannelMessage( message.ChannelID, "Unsuccessful Spotify login :cry:")
+			deleteMessage(session, message)
+		}
+
 		loginLink := spotifyLogin()
 		_, _ = session.ChannelMessageSend(message.ChannelID, loginLink)
 
@@ -181,5 +192,13 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			fmt.Println("Log: Require login")
 			_, _ = session.ChannelMessageSend(message.ChannelID, "Please `!log-in` go get your stats :wink:")
 		}
+	}
+}
+
+func deleteMessage (session *discordgo.Session, message *discordgo.MessageCreate){
+	err := session.ChannelMessageDelete(message.ChannelID, message.ID)
+	for err == nil {
+		err = session.ChannelMessageDelete(message.ChannelID, message.ID)
+		fmt.Println("Cannot delete message")
 	}
 }
