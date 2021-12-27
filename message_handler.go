@@ -59,6 +59,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			fmt.Println("Cannot log in")
 			_, _ = session.ChannelMessage( message.ChannelID, "Unsuccessful Spotify login :cry:")
 			deleteMessage(session, message)
+			return
 		}
 
 		loginLink := spotifyLogin()
