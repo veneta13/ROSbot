@@ -8,7 +8,6 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/zmb3/spotify/v2"
-	spotifyauth "github.com/zmb3/spotify/v2/auth"
 )
 
 const RedirectUri = "http://localhost:8888/callback"
@@ -24,18 +23,7 @@ var (
 	discordSession *discordgo.Session
 	client *spotify.Client
 	user *spotify.PrivateUser
-
-	auth  = spotifyauth.New(
-		spotifyauth.WithRedirectURL(RedirectUri),
-		spotifyauth.WithScopes(
-			spotifyauth.ScopeUserReadPrivate,
-			spotifyauth.ScopePlaylistModifyPublic,
-			spotifyauth.ScopePlaylistModifyPrivate,
-			spotifyauth.ScopeUserLibraryModify,
-			spotifyauth.ScopeUserLibraryRead,
-			spotifyauth.ScopeUserTopRead,
-			spotifyauth.ScopeUserModifyPlaybackState,
-			spotifyauth.ScopeImageUpload))
+	auth = New(WithRedirectURL(RedirectUri))
 	ch    = make(chan *spotify.Client)
 	state = "myState"
 )

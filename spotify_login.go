@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/zmb3/spotify/v2"
-	"golang.org/x/oauth2"
 	"net/http"
 )
 
@@ -30,34 +29,6 @@ func AuthUser() (context.Context, string) {
 	loginLink := "Log in via Spotify here :point_right: " + url
 	return context.Background(), loginLink
 }
-
-type Authenticator struct {
-	config *oauth2.Config
-}
-
-type AuthenticatorOption func(a *Authenticator)
-
-func overrideNew(opts ...AuthenticatorOption) *Authenticator {
-	cfg := &oauth2.Config{
-		ClientID: clientID,
-		ClientSecret: clientSecret,
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  AuthURL,
-			TokenURL: TokenURL,
-		},
-	}
-
-	a := &Authenticator{
-		config: cfg,
-	}
-
-	for _, opt := range opts {
-		opt(a)
-	}
-
-	return a
-}
-
 
 func completeAuth(writer http.ResponseWriter, reader *http.Request) {
 	tok, err := auth.Token(reader.Context(), state, reader)

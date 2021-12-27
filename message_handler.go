@@ -52,8 +52,8 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	if strings.Contains(message.Content, "!log-in"){
 
 		if strings.Contains(message.Content, "ID=") && strings.Contains(message.Content, "SECRET="){
-			clientID = strings.SplitAfter(message.Content, "ID=")[0]
-			clientSecret = strings.SplitAfter(message.Content, "SECRET=")[0]
+			clientID = strings.SplitAfter(strings.Split(message.Content, " ")[1], "ID=")[1]
+			clientSecret = strings.SplitAfter(message.Content, "SECRET=")[1]
 			deleteMessage(session, message)
 		} else {
 			fmt.Println("Cannot log in")
@@ -61,7 +61,19 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			deleteMessage(session, message)
 			return
 		}
-
+		auth = New(
+			WithClientID(clientID),
+			WithClientSecret(clientSecret),
+			WithRedirectURL(RedirectUri),
+			WithScopes(
+				ScopeUserReadPrivate,
+				ScopePlaylistModifyPublic,
+				ScopePlaylistModifyPrivate,
+				ScopeUserLibraryModify,
+				ScopeUserLibraryRead,
+				ScopeUserTopRead,
+				ScopeUserModifyPlaybackState,
+				ScopeImageUpload))
 		loginLink := spotifyLogin()
 		_, _ = session.ChannelMessageSend(message.ChannelID, loginLink)
 
@@ -198,8 +210,11 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 func deleteMessage (session *discordgo.Session, message *discordgo.MessageCreate){
 	err := session.ChannelMessageDelete(message.ChannelID, message.ID)
-	for err == nil {
-		err = session.ChannelMessageDelete(message.ChannelID, message.ID)
+
+	if err != nil {
 		fmt.Println("Cannot delete message")
+		_, _ = session.ChannelMessageSend(
+			message.ChannelID,
+			"<@!" + message.Author.ID + "> Please delete your login message:exclamation:")
 	}
 }
