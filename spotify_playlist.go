@@ -95,34 +95,34 @@ func makeCompletePlaylist(mood string, coverImage string) (playlist *spotify.Ful
 
 func getPlaylistByMood (message string) (*spotify.FullPlaylist, error) {
 	if strings.Contains(message, "happy"){
-		return makeCompletePlaylist("happy", PlaylistCoverFile)
+		return makeCompletePlaylist("happy", playlistCoverFile)
 	}
 	if strings.Contains(message, "sad"){
-		return makeCompletePlaylist("sad", PlaylistCoverFile)
+		return makeCompletePlaylist("sad", playlistCoverFile)
 	}
 	if strings.Contains(message, "relaxed"){
-		return makeCompletePlaylist("relaxing", PlaylistCoverFile)
+		return makeCompletePlaylist("relaxing", playlistCoverFile)
 	}
 	if strings.Contains(message, "party"){
-		return makeCompletePlaylist("party", PlaylistCoverFile)
+		return makeCompletePlaylist("party", playlistCoverFile)
 	}
 	if strings.Contains(message, "focused"){
-		return makeCompletePlaylist("focus", PlaylistCoverFile)
+		return makeCompletePlaylist("focus", playlistCoverFile)
 	}
 	if strings.Contains(message, "romantic"){
-		return makeCompletePlaylist("romance", PlaylistCoverFile)
+		return makeCompletePlaylist("romance", playlistCoverFile)
 	}
 	if strings.Contains(message, "holiday"){
-		return makeCompletePlaylist("holiday", PlaylistCoverFile)
+		return makeCompletePlaylist("holiday", playlistCoverFile)
 	}
 	if strings.Contains(message, "travel"){
-		return makeCompletePlaylist("road", PlaylistCoverFile)
+		return makeCompletePlaylist("road", playlistCoverFile)
 	}
 	if strings.Contains(message, "motivated"){
-		return makeCompletePlaylist("motivational", PlaylistCoverFile)
+		return makeCompletePlaylist("motivational", playlistCoverFile)
 	}
 	if strings.Contains(message, "sleepy"){
-		return makeCompletePlaylist("sleep", PlaylistCoverFile)
+		return makeCompletePlaylist("sleep", playlistCoverFile)
 	}
 	return nil, errors.New("error: mood not found")
 }

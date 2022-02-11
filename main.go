@@ -10,28 +10,29 @@ import (
 	"github.com/zmb3/spotify/v2"
 )
 
-const Port = ":8888"
-const Pattern = "/callback"
-const RedirectUri = "http://localhost:8888/callback"
-const PlaylistCoverURL = "https://raw.githubusercontent.com/veneta13/ROSbot/master/assets/playlist.png?token=AIY3LQX3UH4IYQFDD6DX43TBZ3S54"
-const PlaylistCoverFile = "./assets/playlist.png"
-const AuthURL = "https://accounts.spotify.com/authorize"
-const TokenURL = "https://accounts.spotify.com/api/token"
+const pattern = "/callback"
+const redirectUri = "http://localhost:8888/callback"
+const playlistCoverURL = "https://raw.githubusercontent.com/veneta13/ROSbot/master/assets/playlist.png"
+const playlistCoverFile = "./assets/playlist.png"
+const authURL = "https://accounts.spotify.com/authorize"
+const tokenURL = "https://accounts.spotify.com/api/token"
 
 var (
 	DiscordToken string
+	port string
 	clientSecret string
 	clientID string
 	discordSession *discordgo.Session
 	client *spotify.Client
 	user *spotify.PrivateUser
-	auth = New(WithRedirectURL(RedirectUri))
+	auth = New(WithRedirectURL(redirectUri))
 	ch    = make(chan *spotify.Client)
 	state = "myState"
 )
 
 func init() {
 	flag.StringVar(&DiscordToken, "t", "", "ROSbot Token")
+	flag.StringVar(&port, "port", ":8888", "The port the application is running on")
 	flag.Parse()
 }
 

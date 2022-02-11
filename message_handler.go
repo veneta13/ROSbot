@@ -64,7 +64,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		auth = New(
 			WithClientID(clientID),
 			WithClientSecret(clientSecret),
-			WithRedirectURL(RedirectUri),
+			WithRedirectURL(redirectUri),
 			WithScopes(
 				ScopeUserReadPrivate,
 				ScopePlaylistModifyPublic,
@@ -118,7 +118,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 				Content: playlist.Name + " created successfully :partying_face:",
 				Embed: &discordgo.MessageEmbed{
 					Image: &discordgo.MessageEmbedImage{
-						URL: PlaylistCoverURL,
+						URL: playlistCoverURL,
 					},
 					Color: 0x0088de,
 					Description:
@@ -208,7 +208,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	}
 }
 
-func deleteMessage (session *discordgo.Session, message *discordgo.MessageCreate){
+func deleteMessage (session *discordgo.Session, message *discordgo.MessageCreate) {
 	err := session.ChannelMessageDelete(message.ChannelID, message.ID)
 
 	if err != nil {

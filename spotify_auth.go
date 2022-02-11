@@ -89,8 +89,8 @@ func New(opts ...AuthenticatorOption) *Authenticator {
 		ClientID: "place",
 		ClientSecret: "holder",
 		Endpoint: oauth2.Endpoint{
-			AuthURL:  AuthURL,
-			TokenURL: TokenURL,
+			AuthURL:  authURL,
+			TokenURL: tokenURL,
 		},
 	}
 

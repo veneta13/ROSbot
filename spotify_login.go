@@ -16,9 +16,9 @@ func spotifyLogin() string {
 
 func AuthUser() (context.Context, string) {
 
-	http.HandleFunc(Pattern, completeAuth)
+	http.HandleFunc(pattern, completeAuth)
 	go func() {
-		err := http.ListenAndServe(Port, nil)
+		err := http.ListenAndServe(port, nil)
 		if err != nil {
 			fmt.Println("Error: Callback error")
 			return
