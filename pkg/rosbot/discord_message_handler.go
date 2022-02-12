@@ -17,24 +17,24 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	if message.Content == "!help" {
 		messageContent := &discordgo.MessageSend{
 			Embed: &discordgo.MessageEmbed{
-				Color: 0x0088de,
+				Color:       0x0088de,
 				Description: logger(1),
 			},
 		}
-		_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
+		_, _ = session.ChannelMessageSendComplex(message.ChannelID, messageContent)
 	}
 
-	if strings.Contains(message.Content, "!log-in"){
+	if strings.Contains(message.Content, "!log-in") {
 		var clientID string
 
 		var clientSecret string
 
-		if strings.Contains(message.Content, "ID=") && strings.Contains(message.Content, "SECRET="){
+		if strings.Contains(message.Content, "ID=") && strings.Contains(message.Content, "SECRET=") {
 			clientID, clientSecret = getClientCredentials(message.Content)
 			deleteMessage(session, message)
 		} else {
 			commandLineLogger(6)
-			_, _ = session.ChannelMessage( message.ChannelID, "Unsuccessful Spotify login :cry:")
+			_, _ = session.ChannelMessage(message.ChannelID, "Unsuccessful Spotify login :cry:")
 			deleteMessage(session, message)
 
 			return
@@ -62,8 +62,8 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	}
 
 	// !say-hi command
-	if message.Content == "!say-hi"{
-		_, _ = session.ChannelMessageSend(message.ChannelID, "Hello " + message.Author.Username + " :wave:")
+	if message.Content == "!say-hi" {
+		_, _ = session.ChannelMessageSend(message.ChannelID, "Hello "+message.Author.Username+" :wave:")
 	}
 
 	// !create-playlist command
@@ -105,13 +105,12 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 						URL: projectProperties.playlistCoverURL,
 					},
 					Color: 0x0088de,
-					Description:
-					"You can access your playlist here :point_right:" +
+					Description: "You can access your playlist here :point_right:" +
 						"https://open.spotify.com/playlist/" +
 						string(playlist.ID),
 				},
 			}
-			_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
+			_, _ = session.ChannelMessageSendComplex(message.ChannelID, messageContent)
 		} else {
 			fmt.Println("Log: Require login")
 			_, _ = session.ChannelMessageSend(message.ChannelID, "Please `!log-in` before creating playlists :wink:")
@@ -119,7 +118,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	}
 
 	// !get-stats command
-	if strings.Contains(message.Content, "!get-stats"){
+	if strings.Contains(message.Content, "!get-stats") {
 		client := getClient(message.Author.ID)
 		user, _ := client.CurrentUser(context.Background())
 
@@ -146,7 +145,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 				messageContent := &discordgo.MessageSend{
 					Embed: &discordgo.MessageEmbed{
-						Image:  &discordgo.MessageEmbedImage{
+						Image: &discordgo.MessageEmbedImage{
 							URL: trackList[0].Album.Images[0].URL,
 						},
 						Color: 0xffd700,
@@ -163,7 +162,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 							"10. " + trackList[9].Name + " - " + trackList[9].Artists[0].Name + "\n",
 					},
 				}
-				_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
+				_, _ = session.ChannelMessageSendComplex(message.ChannelID, messageContent)
 			}
 
 			if artists != nil {
@@ -171,7 +170,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 				messageContent := &discordgo.MessageSend{
 					Embed: &discordgo.MessageEmbed{
-						Image:  &discordgo.MessageEmbedImage{
+						Image: &discordgo.MessageEmbedImage{
 							URL: artistList[0].Images[0].URL,
 						},
 						Color: 0xffd700,
@@ -183,7 +182,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 							"5. " + artistList[4].Name + "\n",
 					},
 				}
-				_, _ = session.ChannelMessageSendComplex( message.ChannelID, messageContent)
+				_, _ = session.ChannelMessageSendComplex(message.ChannelID, messageContent)
 			}
 
 			return
@@ -195,7 +194,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	}
 }
 
-func deleteMessage (session *discordgo.Session, message *discordgo.MessageCreate) {
+func deleteMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	err := session.ChannelMessageDelete(message.ChannelID, message.ID)
 
 	if err != nil {
@@ -203,18 +202,18 @@ func deleteMessage (session *discordgo.Session, message *discordgo.MessageCreate
 
 		_, _ = session.ChannelMessageSend(
 			message.ChannelID,
-			"<@!" + message.Author.ID + "> Please delete your login message:exclamation:")
+			"<@!"+message.Author.ID+"> Please delete your login message:exclamation:")
 	}
 }
 
-func getClientCredentials (message string) (clientID string, clientSecret string) {
+func getClientCredentials(message string) (clientID string, clientSecret string) {
 	clientID = strings.SplitAfter(strings.Split(message, " ")[1], "ID=")[1]
 	clientSecret = strings.SplitAfter(message, "SECRET=")[1]
 
 	return
 }
 
-func getClient (discordID string) *spotify.Client {
+func getClient(discordID string) *spotify.Client {
 	if val, ok := users[discordID]; ok {
 		return val
 	}

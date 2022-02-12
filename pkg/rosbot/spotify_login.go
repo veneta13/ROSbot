@@ -12,7 +12,7 @@ import (
 func SpotifyLogin() string {
 	commandLineLogger(14)
 
-	_ , loginLink := AuthUser()
+	_, loginLink := AuthUser()
 
 	return loginLink
 }
@@ -22,7 +22,7 @@ func AuthUser() (context.Context, string) {
 	http.HandleFunc(projectProperties.pattern, completeAuth)
 
 	go func() {
-		err := http.ListenAndServe(":" + strconv.Itoa(projectProperties.port), nil)
+		err := http.ListenAndServe(":"+strconv.Itoa(projectProperties.port), nil)
 		if err != nil {
 			commandLineLogger(2)
 

@@ -18,7 +18,7 @@ func createPlaylist(mood string, client *spotify.Client) (*spotify.FullPlaylist,
 	playlist, err := client.CreatePlaylistForUser(
 		context.Background(),
 		user.ID,
-		user.DisplayName + "'s super cool " + mood + " playlist",
+		user.DisplayName+"'s super cool "+mood+" playlist",
 		"Playlist created by ROSbot",
 		false,
 		false)
@@ -30,7 +30,7 @@ func createPlaylist(mood string, client *spotify.Client) (*spotify.FullPlaylist,
 	return playlist, err
 }
 
-func getTracks(mood string,client *spotify.Client) ([]spotify.ID, error) {
+func getTracks(mood string, client *spotify.Client) ([]spotify.ID, error) {
 	var trackIDs []spotify.ID
 
 	result, err := client.Search(context.Background(), mood, spotify.SearchTypePlaylist)
@@ -38,14 +38,14 @@ func getTracks(mood string,client *spotify.Client) ([]spotify.ID, error) {
 		commandLineLogger(20)
 	}
 
-	for _, currentPlaylist := range result.Playlists.Playlists{
+	for _, currentPlaylist := range result.Playlists.Playlists {
 		playlistTracks, err := client.GetPlaylistTracks(context.Background(), currentPlaylist.ID)
 		if err != nil {
 			return nil, err
 		}
 
 		for _, track := range playlistTracks.Tracks {
-			if rand.Int31() % 100  == 10 {
+			if rand.Int31()%100 == 10 {
 				trackIDs = append(trackIDs, track.Track.ID)
 			}
 		}
@@ -66,8 +66,8 @@ func readImage(imagePath string) (io.Reader, error) {
 }
 
 func makeCompletePlaylist(mood string,
-						  coverImage string,
-						  client *spotify.Client) (playlist *spotify.FullPlaylist, err error) {
+	coverImage string,
+	client *spotify.Client) (playlist *spotify.FullPlaylist, err error) {
 	playlist, err = createPlaylist(mood, client)
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func makeCompletePlaylist(mood string,
 		return nil, err
 	}
 
-	for _,track := range tracks {
+	for _, track := range tracks {
 		_, err := client.AddTracksToPlaylist(context.Background(), playlist.ID, track)
 		if err != nil {
 			commandLineLogger(23)

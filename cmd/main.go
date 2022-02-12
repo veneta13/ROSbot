@@ -12,7 +12,7 @@ import (
 
 var (
 	discordToken string
-	port int
+	port         int
 )
 
 func init() {

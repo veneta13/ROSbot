@@ -2,8 +2,8 @@ package rosbot
 
 import "fmt"
 
-//commandLineLogger Logs necessary information on the command line.
-func commandLineLogger (messageCode int) {
+// commandLineLogger Logs necessary information on the command line.
+func commandLineLogger(messageCode int) {
 	switch messageCode {
 	case 1:
 		fmt.Println("Error: Cannot create Discord session.")

@@ -48,7 +48,7 @@ func GetStatsType(message string) (statsType int, statsTime string) {
 	case strings.Contains(message, "all time"):
 		statsTime = "long_term"
 	}
-	
+
 	return
 }
 

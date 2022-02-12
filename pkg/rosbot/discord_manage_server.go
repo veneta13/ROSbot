@@ -14,29 +14,30 @@ type ProjectProperties struct {
 	playlistCoverFile string
 	authURL           string
 	tokenURL          string
-	state			  string
-	port 			  int
+	state             string
+	port              int
 }
 
-var projectProperties = ProjectProperties {
+var projectProperties = ProjectProperties{
 	pattern:           "/callback",
 	playlistCoverURL:  "https://raw.githubusercontent.com/veneta13/ROSbot/master/assets/playlist.png",
 	playlistCoverFile: "./../assets/playlist.png",
 	authURL:           "https://accounts.spotify.com/authorize",
 	tokenURL:          "https://accounts.spotify.com/api/token",
-	state:			   "myState",
+	state:             "myState",
 }
 
 var ch chan *spotify.Client
-var users map[string] *spotify.Client
+var users map[string]*spotify.Client
 var auth *Authenticator
 var discordSession *discordgo.Session
 
+// StartServer Starts the Discord server session.
 func StartServer(discordToken string, port int, channel chan *spotify.Client) {
 	projectProperties.redirectURL = "http://localhost:" + strconv.Itoa(port) + projectProperties.pattern
 	projectProperties.port = port
 
-	users = make(map[string] *spotify.Client)
+	users = make(map[string]*spotify.Client)
 
 	ch = channel
 
@@ -70,7 +71,7 @@ func StartServer(discordToken string, port int, channel chan *spotify.Client) {
 	commandLineLogger(4)
 }
 
-func StopServer(){
+func StopServer() {
 	if err := discordSession.Close(); err != nil {
 		commandLineLogger(5)
 	}

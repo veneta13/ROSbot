@@ -53,7 +53,6 @@ const (
 	ScopeStreaming = "streaming"
 )
 
-
 type Authenticator struct {
 	config *oauth2.Config
 }
@@ -86,10 +85,10 @@ func WithRedirectURL(url string) AuthenticatorOption {
 
 func New(opts ...AuthenticatorOption) *Authenticator {
 	cfg := &oauth2.Config{
-		ClientID: "place",
+		ClientID:     "place",
 		ClientSecret: "holder",
 		Endpoint: oauth2.Endpoint{
-			AuthURL: "https://accounts.spotify.com/authorize",
+			AuthURL:  "https://accounts.spotify.com/authorize",
 			TokenURL: "https://accounts.spotify.com/api/token",
 		},
 	}
