@@ -1,4 +1,4 @@
-package main
+package rosbot
 
 import (
 	"context"
@@ -89,8 +89,8 @@ func New(opts ...AuthenticatorOption) *Authenticator {
 		ClientID: "place",
 		ClientSecret: "holder",
 		Endpoint: oauth2.Endpoint{
-			AuthURL:  authURL,
-			TokenURL: tokenURL,
+			AuthURL: "https://accounts.spotify.com/authorize",
+			TokenURL: "https://accounts.spotify.com/api/token",
 		},
 	}
 
@@ -109,6 +109,7 @@ func contextWithHTTPClient(ctx context.Context) context.Context {
 	tr := &http.Transport{
 		TLSNextProto: map[string]func(authority string, c *tls.Conn) http.RoundTripper{},
 	}
+
 	return context.WithValue(ctx, oauth2.HTTPClient, &http.Client{Transport: tr})
 }
 
@@ -118,7 +119,8 @@ func (a Authenticator) AuthURL(state string, opts ...oauth2.AuthCodeOption) stri
 	return a.config.AuthCodeURL(state, opts...)
 }
 
-func (a Authenticator) Token(ctx context.Context, state string, r *http.Request, opts ...oauth2.AuthCodeOption) (*oauth2.Token, error) {
+func (a Authenticator) Token(
+	ctx context.Context, state string, r *http.Request, opts ...oauth2.AuthCodeOption) (*oauth2.Token, error) {
 	values := r.URL.Query()
 	if e := values.Get("error"); e != "" {
 		return nil, errors.New("spotify: auth failed - " + e)
@@ -134,7 +136,8 @@ func (a Authenticator) Token(ctx context.Context, state string, r *http.Request,
 	return a.config.Exchange(contextWithHTTPClient(ctx), code, opts...)
 }
 
-func (a Authenticator) Exchange(ctx context.Context, code string, opts ...oauth2.AuthCodeOption) (*oauth2.Token, error) {
+func (a Authenticator) Exchange(
+	ctx context.Context, code string, opts ...oauth2.AuthCodeOption) (*oauth2.Token, error) {
 	return a.config.Exchange(contextWithHTTPClient(ctx), code, opts...)
 }
 

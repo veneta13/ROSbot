@@ -18,7 +18,7 @@ go run . -t DISCORD_BOT_TOKEN
 The following message should appear on the command prompt:
 
 ```shell
-Log: ROSbot is up.
+Log: rosbot is up.
 ```
 
 ## Commands

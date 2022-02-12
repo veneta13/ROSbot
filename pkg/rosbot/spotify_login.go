@@ -1,49 +1,59 @@
-package main
+package rosbot
 
 import (
 	"context"
 	"fmt"
 	"github.com/zmb3/spotify/v2"
 	"net/http"
+	"strconv"
 )
 
-func spotifyLogin() string {
-	// Spotify authentication
-	fmt.Println("spotify-login")
+// SpotifyLogin Spotify authentication
+func SpotifyLogin() string {
+	commandLineLogger(14)
+
 	_ , loginLink := AuthUser()
+
 	return loginLink
 }
 
+// AuthUser Authenticate user
 func AuthUser() (context.Context, string) {
+	http.HandleFunc(projectProperties.pattern, completeAuth)
 
-	http.HandleFunc(pattern, completeAuth)
 	go func() {
-		err := http.ListenAndServe(port, nil)
+		err := http.ListenAndServe(":" + strconv.Itoa(projectProperties.port), nil)
 		if err != nil {
-			fmt.Println("Error: Callback error")
+			commandLineLogger(2)
+
 			return
 		}
 	}()
 
-	url := auth.AuthURL(state)
+	url := auth.AuthURL(projectProperties.state)
 	loginLink := "Log in via Spotify here :point_right: " + url
+
 	return context.Background(), loginLink
 }
 
+// complete authentication
 func completeAuth(writer http.ResponseWriter, reader *http.Request) {
-	tok, err := auth.Token(reader.Context(), state, reader)
+	tok, err := auth.Token(reader.Context(), projectProperties.state, reader)
+
 	if err != nil {
 		http.Error(writer, "Error: Error getting Spotify token", http.StatusForbidden)
-		fmt.Println("Error: Error getting Spotify token")
+		commandLineLogger(15)
 	}
 
 	client := spotify.New(auth.Client(reader.Context(), tok))
 	_, err = fmt.Fprintf(writer, "Log: Login Completed")
+
 	if err != nil {
 		http.Error(writer, "Error: Cannot log in", http.StatusForbidden)
-		fmt.Println("Error: Cannot log in")
+		commandLineLogger(16)
 	}
 
 	ch <- client
-	fmt.Println("Log: Login successful")
+
+	commandLineLogger(17)
 }
