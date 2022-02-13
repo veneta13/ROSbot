@@ -28,16 +28,54 @@ const (
 		":sleeping: sleepy \n\n"
 
 	message2 = "Log in via Spotify here :point_right: "
+
+	message3 = "Please delete your login message:exclamation:"
+
+	message4 = "Cannot create playlist :pensive: Please try again"
+
+	message5 = "Key word not recognised :cry: Please try again"
+
+	message7 = " created successfully :partying_face:"
+
+	message8 = "You can access your playlist here :point_right:" +
+			   "https://open.spotify.com/playlist/"
+
+	message9 = "Please `!log-in` before creating playlists :wink:"
+
+	message10 = "Getting your stats was unsuccessful :cry: Please try again"
+
+	message11 = "I don't recognise this command :thinking: Please try again"
+
+	message12 = "Please `!log-in` go get your stats :wink:"
 )
 
 // Gets message text for the bot Discord messages.
-func logger(messageCode int, arguments ...[]string) string {
-	if messageCode == 1 {
+func logger(messageCode int, arguments ...string) string {
+	switch messageCode {
+	case 1:
 		return message1
-	}
-
-	if messageCode == 2 {
+	case 2:
 		return message2
+	case 3:
+		return "<@!" + arguments[0] + ">" + message3
+	case 4:
+		return message4
+	case 5:
+		return message5
+	case 6:
+		return  "Hello "+ arguments[0] +" :wave:"
+	case 7:
+		return arguments[0] + message7
+	case 8:
+		return message8 + arguments[0]
+	case 9:
+		return message9
+	case 10:
+		return message10
+	case 11:
+		return message11
+	case 12:
+		return message12
 	}
 
 	return ""

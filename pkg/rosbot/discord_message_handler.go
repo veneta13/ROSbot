@@ -64,7 +64,9 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 	// !say-hi command
 	if message.Content == "!say-hi" {
-		_, _ = session.ChannelMessageSend(message.ChannelID, "Hello "+message.Author.Username+" :wave:")
+		_, _ = session.ChannelMessageSend(
+			message.ChannelID,
+			logger(6, message.Author.Username))
 	}
 
 	// !create-playlist command
@@ -82,7 +84,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			if err != nil {
 				_, _ = session.ChannelMessageSend(
 					message.ChannelID,
-					"Cannot create playlist :pensive: Please try again")
+					logger(4))
 
 				commandLineLogger(19)
 
@@ -92,7 +94,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			if playlist == nil {
 				_, _ = session.ChannelMessageSend(
 					message.ChannelID,
-					"Key word not recognised :cry: Please try again")
+					logger(5))
 
 				return
 			}
@@ -100,21 +102,21 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			commandLineLogger(8)
 
 			messageContent := &discordgo.MessageSend{
-				Content: playlist.Name + " created successfully :partying_face:",
+				Content: logger(7, playlist.Name),
 				Embed: &discordgo.MessageEmbed{
 					Image: &discordgo.MessageEmbedImage{
 						URL: projectProperties.playlistCoverURL,
 					},
 					Color: 0x0088de,
-					Description: "You can access your playlist here :point_right:" +
-						"https://open.spotify.com/playlist/" +
-						string(playlist.ID),
+					Description: logger(8, string(playlist.ID)),
 				},
 			}
 			_, _ = session.ChannelMessageSendComplex(message.ChannelID, messageContent)
 		} else {
 			fmt.Println("Log: Require login")
-			_, _ = session.ChannelMessageSend(message.ChannelID, "Please `!log-in` before creating playlists :wink:")
+			_, _ = session.ChannelMessageSend(
+				message.ChannelID,
+				logger(9))
 		}
 	}
 
@@ -130,7 +132,9 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			if err != nil {
 				commandLineLogger(9)
 
-				_, _ = session.ChannelMessageSend(message.ChannelID, "Getting your stats was unsuccessful :cry: Please try again")
+				_, _ = session.ChannelMessageSend(
+					message.ChannelID,
+					logger(10))
 
 				return
 			}
@@ -138,7 +142,9 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 			if tracks == nil && artists == nil {
 				commandLineLogger(10)
 
-				_, _ = session.ChannelMessageSend(message.ChannelID, "I don't recognise this command :thinking: Please try again")
+				_, _ = session.ChannelMessageSend(
+					message.ChannelID,
+					logger(11))
 
 				return
 			}
@@ -193,7 +199,9 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 		commandLineLogger(11)
 
-		_, _ = session.ChannelMessageSend(message.ChannelID, "Please `!log-in` go get your stats :wink:")
+		_, _ = session.ChannelMessageSend(
+			message.ChannelID,
+			logger(12))
 	}
 }
 
@@ -206,7 +214,7 @@ func deleteMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 
 		_, _ = session.ChannelMessageSend(
 			message.ChannelID,
-			"<@!"+message.Author.ID+"> Please delete your login message:exclamation:")
+			logger(3, message.Author.ID))
 	}
 }
 
