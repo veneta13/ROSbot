@@ -107,7 +107,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 					Image: &discordgo.MessageEmbedImage{
 						URL: projectProperties.playlistCoverURL,
 					},
-					Color: 0x0088de,
+					Color:       0x0088de,
 					Description: logger(8, string(playlist.ID)),
 				},
 			}

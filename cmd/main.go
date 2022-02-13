@@ -15,7 +15,7 @@ var (
 	discordToken string
 
 	// port Where the application is running.
-	port         int
+	port int
 )
 
 // Command flags.

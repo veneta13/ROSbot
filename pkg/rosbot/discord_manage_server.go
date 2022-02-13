@@ -33,7 +33,7 @@ var projectProperties = ProjectProperties{
 var ch chan *spotify.Client
 
 // Maps the Discord user ID to their Spotify client credentials.
-var users map[string] *spotify.Client
+var users map[string]*spotify.Client
 
 // Spotify authenticator, storing permission information.
 var auth *Authenticator

@@ -38,7 +38,7 @@ const (
 	message7 = " created successfully :partying_face:"
 
 	message8 = "You can access your playlist here :point_right:" +
-			   "https://open.spotify.com/playlist/"
+		"https://open.spotify.com/playlist/"
 
 	message9 = "Please `!log-in` before creating playlists :wink:"
 
@@ -63,7 +63,7 @@ func logger(messageCode int, arguments ...string) string {
 	case 5:
 		return message5
 	case 6:
-		return  "Hello "+ arguments[0] +" :wave:"
+		return "Hello " + arguments[0] + " :wave:"
 	case 7:
 		return arguments[0] + message7
 	case 8:

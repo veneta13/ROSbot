@@ -140,7 +140,6 @@ func New(opts ...AuthenticatorOption) *Authenticator {
 	return a
 }
 
-
 func contextWithHTTPClient(ctx context.Context) context.Context {
 	tr := &http.Transport{
 		TLSNextProto: map[string]func(authority string, c *tls.Conn) http.RoundTripper{},
@@ -171,14 +170,18 @@ func (a Authenticator) Token(
 	if e := values.Get("error"); e != "" {
 		return nil, errors.New("spotify: auth failed - " + e)
 	}
+
 	code := values.Get("code")
+
 	if code == "" {
 		return nil, errors.New("spotify: didn't get access code")
 	}
 	actualState := values.Get("state")
+
 	if actualState != state {
 		return nil, errors.New("spotify: redirect state parameter doesn't match")
 	}
+
 	return a.config.Exchange(contextWithHTTPClient(ctx), code, opts...)
 }
 
