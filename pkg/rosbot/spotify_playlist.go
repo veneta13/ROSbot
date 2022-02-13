@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// Create a playlist for client from the given mood.
 func createPlaylist(mood string, client *spotify.Client) (*spotify.FullPlaylist, error) {
 	commandLineLogger(18)
 
@@ -30,6 +31,8 @@ func createPlaylist(mood string, client *spotify.Client) (*spotify.FullPlaylist,
 	return playlist, err
 }
 
+// Get random tracks from Spotify playlists according to the mood
+// and return an array of their IDs.
 func getTracks(mood string, client *spotify.Client) ([]spotify.ID, error) {
 	var trackIDs []spotify.ID
 
@@ -54,6 +57,7 @@ func getTracks(mood string, client *spotify.Client) ([]spotify.ID, error) {
 	return trackIDs, err
 }
 
+// Create a reader for images.
 func readImage(imagePath string) (io.Reader, error) {
 	file, err := ioutil.ReadFile(imagePath)
 	if err != nil {
@@ -65,6 +69,7 @@ func readImage(imagePath string) (io.Reader, error) {
 	return reader, err
 }
 
+// Create a playlist by mood, fill it with tracks and set its image.
 func makeCompletePlaylist(mood string,
 	coverImage string,
 	client *spotify.Client) (playlist *spotify.FullPlaylist, err error) {
@@ -104,6 +109,7 @@ func makeCompletePlaylist(mood string,
 	return playlist, err
 }
 
+// GetPlaylistByMood creates a playlist from the available moods.
 func GetPlaylistByMood(message string, client *spotify.Client) (*spotify.FullPlaylist, error) {
 	if strings.Contains(message, "happy") {
 		return makeCompletePlaylist("happy", projectProperties.playlistCoverFile, client)

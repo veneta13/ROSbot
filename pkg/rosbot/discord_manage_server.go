@@ -1,3 +1,4 @@
+// Package rosbot holds all bot logic for communication with the Discord and Spotify APIs.
 package rosbot
 
 import (
@@ -7,6 +8,7 @@ import (
 	"strconv"
 )
 
+// ProjectProperties stores properties used to set up the project.
 type ProjectProperties struct {
 	pattern           string
 	redirectURL       string
@@ -27,12 +29,20 @@ var projectProperties = ProjectProperties{
 	state:             "myState",
 }
 
+// The Spotify client channel.
 var ch chan *spotify.Client
-var users map[string]*spotify.Client
+
+// Maps the Discord user ID to their Spotify client credentials.
+var users map[string] *spotify.Client
+
+// Spotify authenticator, storing permission information.
 var auth *Authenticator
+
+// The current Discord session.
 var discordSession *discordgo.Session
 
-// StartServer Starts the Discord server session.
+// StartServer starts the Discord server session.
+// Sets up additional project properties.
 func StartServer(discordToken string, port int, channel chan *spotify.Client) {
 	projectProperties.redirectURL = "http://localhost:" + strconv.Itoa(port) + projectProperties.pattern
 	projectProperties.port = port
@@ -53,13 +63,13 @@ func StartServer(discordToken string, port int, channel chan *spotify.Client) {
 		return
 	}
 
-	// messageCreate - callback for MessageCreate events
+	// Set messageCreate as callback for events.
 	discordSession.AddHandler(messageCreate)
 
-	// receiving message events
+	// Receive message events.
 	discordSession.Identify.Intents = discordgo.IntentsGuildMessages
 
-	// open websocket connection
+	// Open websocket connection.
 	sessionError = discordSession.Open()
 	if sessionError != nil {
 		fmt.Println(sessionError)
@@ -71,6 +81,7 @@ func StartServer(discordToken string, port int, channel chan *spotify.Client) {
 	commandLineLogger(4)
 }
 
+// StopServer stops the Discord server session.
 func StopServer() {
 	if err := discordSession.Close(); err != nil {
 		commandLineLogger(5)

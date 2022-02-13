@@ -1,5 +1,6 @@
 package rosbot
 
+// Bot Discord messages.
 const (
 	message1 = ":scroll: **COMMANDS**\n\n" +
 		":point_right: use `!help` to get this list\n\n" +
@@ -25,11 +26,18 @@ const (
 		":blue_car: travel\n\n" +
 		":raised_hands: motivated \n\n" +
 		":sleeping: sleepy \n\n"
+
+	message2 = "Log in via Spotify here :point_right: "
 )
 
+// Gets message text for the bot Discord messages.
 func logger(messageCode int, arguments ...[]string) string {
 	if messageCode == 1 {
 		return message1
+	}
+
+	if messageCode == 2 {
+		return message2
 	}
 
 	return ""

@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Get artist statistics in set timeframe for current client.
 func getArtistStats(time string, client *spotify.Client) (*spotify.FullArtistPage, error) {
 	artists, err := client.CurrentUsersTopArtists(
 		context.Background(),
@@ -18,6 +19,7 @@ func getArtistStats(time string, client *spotify.Client) (*spotify.FullArtistPag
 	return artists, err
 }
 
+// Get track statistics in set timeframe for current client.
 func getTrackStats(time string, client *spotify.Client) (*spotify.FullTrackPage, error) {
 	tracks, err := client.CurrentUsersTopTracks(
 		context.Background(),
@@ -30,7 +32,9 @@ func getTrackStats(time string, client *spotify.Client) (*spotify.FullTrackPage,
 	return tracks, err
 }
 
-func GetStatsType(message string) (statsType int, statsTime string) {
+// Extract the statistics type (artist/track/full) and statistics period
+// (last month/6 months/all time) from user request message.
+func getStatsType(message string) (statsType int, statsTime string) {
 	switch {
 	case strings.Contains(message, "artist"):
 		statsType = 1
@@ -52,7 +56,10 @@ func GetStatsType(message string) (statsType int, statsTime string) {
 	return
 }
 
-func GetStats(statsType int, statsTime string, client *spotify.Client) (tracks *spotify.FullTrackPage,
+// Get statistics from Spotify API for current user according
+// to request parameters.
+func getStats(statsType int, statsTime string, client *spotify.Client) (
+	tracks *spotify.FullTrackPage,
 	artists *spotify.FullArtistPage,
 	err error) {
 	switch statsType {
@@ -78,12 +85,14 @@ func GetStats(statsType int, statsTime string, client *spotify.Client) (tracks *
 	return
 }
 
+// Transform Spotify response from FullTrackPage to array of FullTrack values.
 func makeTrackList(tracks *spotify.FullTrackPage) (trackList []spotify.FullTrack) {
 	trackList = append(trackList, tracks.Tracks...)
 
 	return
 }
 
+// Transform Spotify response from FullArtistPage to array of FullArtist values.
 func makeArtistList(artists *spotify.FullArtistPage) (artistList []spotify.FullArtist) {
 	artistList = append(artistList, artists.Artists...)
 

@@ -8,8 +8,9 @@ import (
 	"strings"
 )
 
+// Handles input messages and creates a response.
 func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate) {
-	// Ignore ROSbot messages
+	// Ignore bot messages
 	if message.Author.ID == session.State.User.ID {
 		return
 	}
@@ -123,11 +124,12 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		user, _ := client.CurrentUser(context.Background())
 
 		if user != nil {
-			types, time := GetStatsType(message.Content)
-			tracks, artists, err := GetStats(types, time, client)
+			types, time := getStatsType(message.Content)
+			tracks, artists, err := getStats(types, time, client)
 
 			if err != nil {
 				commandLineLogger(9)
+
 				_, _ = session.ChannelMessageSend(message.ChannelID, "Getting your stats was unsuccessful :cry: Please try again")
 
 				return
@@ -135,6 +137,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 			if tracks == nil && artists == nil {
 				commandLineLogger(10)
+
 				_, _ = session.ChannelMessageSend(message.ChannelID, "I don't recognise this command :thinking: Please try again")
 
 				return
@@ -194,6 +197,7 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	}
 }
 
+// Delete the user login message after retrieving the login credentials.
 func deleteMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	err := session.ChannelMessageDelete(message.ChannelID, message.ID)
 
@@ -206,6 +210,7 @@ func deleteMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	}
 }
 
+// Get Spotify client ID and secret key from the user login message.
 func getClientCredentials(message string) (clientID string, clientSecret string) {
 	clientID = strings.SplitAfter(strings.Split(message, " ")[1], "ID=")[1]
 	clientSecret = strings.SplitAfter(message, "SECRET=")[1]
@@ -213,10 +218,12 @@ func getClientCredentials(message string) (clientID string, clientSecret string)
 	return
 }
 
+// Get Spotify client from Discord user ID.
 func getClient(discordID string) *spotify.Client {
 	if val, ok := users[discordID]; ok {
 		return val
 	}
+
 	commandLineLogger(13)
 
 	return nil

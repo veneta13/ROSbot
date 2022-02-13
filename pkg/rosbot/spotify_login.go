@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// SpotifyLogin Spotify authentication
+// SpotifyLogin returns a Spotify login link for the current user.
 func SpotifyLogin() string {
 	commandLineLogger(14)
 
@@ -17,7 +17,7 @@ func SpotifyLogin() string {
 	return loginLink
 }
 
-// AuthUser Authenticate user
+// AuthUser opens a port for listening to Spotify login.
 func AuthUser() (context.Context, string) {
 	http.HandleFunc(projectProperties.pattern, completeAuth)
 
@@ -31,12 +31,12 @@ func AuthUser() (context.Context, string) {
 	}()
 
 	url := auth.AuthURL(projectProperties.state)
-	loginLink := "Log in via Spotify here :point_right: " + url
+	loginLink := logger(2) + url
 
 	return context.Background(), loginLink
 }
 
-// complete authentication
+// Complete Spotify token authentication and print message on the browser port.
 func completeAuth(writer http.ResponseWriter, reader *http.Request) {
 	tok, err := auth.Token(reader.Context(), projectProperties.state, reader)
 
