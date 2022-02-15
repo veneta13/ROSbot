@@ -157,18 +157,8 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 						Image: &discordgo.MessageEmbedImage{
 							URL: trackList[0].Album.Images[0].URL,
 						},
-						Color: 0xffd700,
-						Description: ":trophy: **YOUR TOP SONGS**\n\n" +
-							":first_place: " + trackList[0].Name + " - " + trackList[0].Artists[0].Name + "\n" +
-							":second_place: " + trackList[1].Name + " - " + trackList[1].Artists[0].Name + "\n" +
-							":third_place: " + trackList[2].Name + " - " + trackList[2].Artists[0].Name + "\n" +
-							"4. " + trackList[3].Name + " - " + trackList[3].Artists[0].Name + "\n" +
-							"5. " + trackList[4].Name + " - " + trackList[4].Artists[0].Name + "\n" +
-							"6. " + trackList[5].Name + " - " + trackList[5].Artists[0].Name + "\n" +
-							"7. " + trackList[6].Name + " - " + trackList[6].Artists[0].Name + "\n" +
-							"8. " + trackList[7].Name + " - " + trackList[7].Artists[0].Name + "\n" +
-							"9. " + trackList[8].Name + " - " + trackList[8].Artists[0].Name + "\n" +
-							"10. " + trackList[9].Name + " - " + trackList[9].Artists[0].Name + "\n",
+						Color:       0xffd700,
+						Description: tracklistStringify(trackList),
 					},
 				}
 				_, _ = session.ChannelMessageSendComplex(message.ChannelID, messageContent)
@@ -182,13 +172,8 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 						Image: &discordgo.MessageEmbedImage{
 							URL: artistList[0].Images[0].URL,
 						},
-						Color: 0xffd700,
-						Description: ":trophy: **YOUR TOP ARTISTS**\n\n" +
-							":first_place: " + artistList[0].Name + "\n" +
-							":second_place: " + artistList[1].Name + "\n" +
-							":third_place: " + artistList[2].Name + "\n" +
-							"4. " + artistList[3].Name + "\n" +
-							"5. " + artistList[4].Name + "\n",
+						Color:       0xffd700,
+						Description: artistlistStringify(artistList),
 					},
 				}
 				_, _ = session.ChannelMessageSendComplex(message.ChannelID, messageContent)
@@ -235,4 +220,27 @@ func getClient(discordID string) *spotify.Client {
 	commandLineLogger(13)
 
 	return nil
+}
+
+func tracklistStringify(trackList []spotify.FullTrack) string {
+	return ":trophy: **YOUR TOP SONGS**\n\n" +
+		":first_place: " + trackList[0].Name + " - " + trackList[0].Artists[0].Name + "\n" +
+		":second_place: " + trackList[1].Name + " - " + trackList[1].Artists[0].Name + "\n" +
+		":third_place: " + trackList[2].Name + " - " + trackList[2].Artists[0].Name + "\n" +
+		"4. " + trackList[3].Name + " - " + trackList[3].Artists[0].Name + "\n" +
+		"5. " + trackList[4].Name + " - " + trackList[4].Artists[0].Name + "\n" +
+		"6. " + trackList[5].Name + " - " + trackList[5].Artists[0].Name + "\n" +
+		"7. " + trackList[6].Name + " - " + trackList[6].Artists[0].Name + "\n" +
+		"8. " + trackList[7].Name + " - " + trackList[7].Artists[0].Name + "\n" +
+		"9. " + trackList[8].Name + " - " + trackList[8].Artists[0].Name + "\n" +
+		"10. " + trackList[9].Name + " - " + trackList[9].Artists[0].Name + "\n"
+}
+
+func artistlistStringify(artistList []spotify.FullArtist) string {
+	return ":trophy: **YOUR TOP ARTISTS**\n\n" +
+		":first_place: " + artistList[0].Name + "\n" +
+		":second_place: " + artistList[1].Name + "\n" +
+		":third_place: " + artistList[2].Name + "\n" +
+		"4. " + artistList[3].Name + "\n" +
+		"5. " + artistList[4].Name + "\n"
 }
