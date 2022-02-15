@@ -28,10 +28,10 @@ Log: ROSbot is up.
 ROSbot supports the following commands:
 
 | Command | Description | Arguments | Image |
-|:-:|:-:|:-:|
+|:-:|:-:|:-:|:-:|
 | `!help` | print a list of all commands |   |![Help command](/readme_pics/command.PNG) |
-| `!log-in  ID={client_id} SECRET={client_secret}` | print a link for Spotify authorisation | `client_id` - the Client ID from Spotify `client_secret` - the Client Secret from Spotify | |
-| `!say-hi` | greet the user |   |||
-| `!get-stats {type} {time}` | get the Spotify statistics of the user | `{type}` - artist / track `{time}` - last month / last 6 months / all time | ![Artist statistics](/readme_pics/artists.png) |
+| `!log-in  ID={client_id} SECRET={client_secret}` | print a link for Spotify authorisation | `client_id` - the Client ID from Spotify `client_secret` - the Client Secret from Spotify |   |
+| `!say-hi` | greet the user |   |   |
+| `!get-stats {type} {time}` | get the Spotify statistics of the user | `{type}` - artist / track `{time}` - last month / last 6 months / all time | ![Artist statistics](/readme_pics/artists.png) ![Track statistics](/readme_pics/songs.png) |
 |`!create-playlist {mood}`| create a Spotify playlist according to a given mood | `{mood}` - happy / sad / relaxed / party / focused / romantic / holiday / travel / motivated / sleepy | ![Playlist](/readme_pics/playlist.png) |
 
