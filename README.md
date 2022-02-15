@@ -1,7 +1,7 @@
 
 # ROSbot
 
-A Discord bot generating Spotify playlists
+A Discord bot for generating Spotify playlists and retrieving Spotify user statistics.
 
 ## Setup
 
