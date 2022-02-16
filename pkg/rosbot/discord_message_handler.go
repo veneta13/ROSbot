@@ -222,6 +222,7 @@ func getClient(discordID string) *spotify.Client {
 	return nil
 }
 
+// Stringify the track list.
 func tracklistStringify(trackList []spotify.FullTrack) string {
 	return ":trophy: **YOUR TOP SONGS**\n\n" +
 		":first_place: " + trackList[0].Name + " - " + trackList[0].Artists[0].Name + "\n" +
@@ -236,6 +237,7 @@ func tracklistStringify(trackList []spotify.FullTrack) string {
 		"10. " + trackList[9].Name + " - " + trackList[9].Artists[0].Name + "\n"
 }
 
+// Stringify the artist list.
 func artistlistStringify(artistList []spotify.FullArtist) string {
 	return ":trophy: **YOUR TOP ARTISTS**\n\n" +
 		":first_place: " + artistList[0].Name + "\n" +
